@@ -54,7 +54,7 @@ namespace transaction
             using (var connection = new MySqlConnection(connectionstring))
             {
                 connection.Open();
-                var command = new MySqlCommand("SELECT * FROM transactions", connection);
+                var command = new MySqlCommand("SELECT * FROM transactionss", connection);
                 
 
                 var reader = command.ExecuteReader();
