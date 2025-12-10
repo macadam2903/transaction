@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.IO;
+using MySql.Data.MySqlClient;
 using System.Linq;
 using System.Security.AccessControl;
 using System.Text;
@@ -36,18 +38,34 @@ namespace transaction
                 {
                     Console.WriteLine(t.ToString());
                 }
+                ConnectionDatabase();
             }
             catch (Exception e)
             {
-                Console.WriteLine($"Hiba tortent a fajl beolvasasa kozben: {e.Message}" );
+                Console.WriteLine($"Hiba tortent a fajl beolvasasa kozben: {e}" );
             }
             Console.WriteLine("Kész vagy te gyászfejú");
             Console.ReadLine();
         }
-        private void ConnectionDatabase()
+        private static void ConnectionDatabase()
         {
-            // Database connection logic here
-            string connectionstring = "Server=localhost;Database=transactions;User Id=myUsername;Password=;";
+            string connectionstring = "Server=localhost;Port=3307;Database=transaction;User=root;Password=;";
+
+            using (var connection = new MySqlConnection(connectionstring))
+            {
+                connection.Open();
+                var command = new MySqlCommand("SELECT * FROM transactions", connection);
+                
+
+                var reader = command.ExecuteReader();
+
+                while (reader.Read())
+                {
+
+                    Console.WriteLine($"{reader["date"]}");
+                }
+
+            }
         }
         static IEnumerable<Transaction> ReadFromCSVToTransaction(string path, TransactionType.Type type)
         {
